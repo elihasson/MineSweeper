@@ -1,0 +1,184 @@
+body {
+    color:rgb(27, 27, 26);
+    background-image: url("imgs/mineSweeper2.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    position:relative;
+    background-color: rgb(18, 27, 26);
+    z-index:-1;
+  }
+
+.headline {
+    color: rgb(216, 67, 67);
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    z-index:1;
+    position:relative;
+    font-size:10ch;
+    text-shadow: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding: 1px;
+    /* font-weight:bold; */
+}
+
+.difficulty {
+    z-index:1;
+    height: 50px;
+    width: 320px;
+    position:relative;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: rgb(216, 67, 67);
+    font-weight:bold;
+}
+
+.difficulty-title {
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    z-index:1;
+    color:antiquewhite;
+    font-size:x-large;
+    font-style:inherit;
+    text-align: center;
+    position:relative; 
+    text-decoration:dashed;
+    font-weight:bold;       
+}
+
+.top {
+    display: flex;
+    width: 666px;
+    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+    margin-bottom: 3px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: antiquewhite;
+    border-style:groove;
+}
+
+.top div {
+    height: 20px;
+    font-size: 20px;
+}
+
+.timer {
+    /* background-color: rgba(79, 109, 146, 0.388); */
+    font-size: x-large;
+    /* float: left; */
+    /* text-align: left; */
+    /* margin-left: 350px; */
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color:antiquewhite;
+    text-decoration:dashed;
+    width: 150px;   
+    font-weight:bold;
+
+
+}
+ 
+.msguser {
+    /* background-color: rgba(113, 185, 124, 0.388); */
+    /* color: rgb(216, 67, 67); */
+    color:greenyellow;
+    text-decoration:dashed;
+    z-index:2;
+    font-size: x-large;
+    text-align: left;
+    /* margin-left: 350px; */
+    position:relative;  
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 300px;
+    font-weight:bold;
+}
+
+.mines {
+    /* background-color: rgba(146, 117, 79, 0.388); */
+    font-size: x-large;
+    /* float:right; */
+    text-align: left;
+    /* margin-left: 350px; */
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color:antiquewhite;
+    text-decoration:dashed;
+    width: 150px;
+    font-weight:bold;
+}
+
+.restart {
+    /* background-color:bisque; */
+    background-color: rgb(216, 67, 67);
+    height: 20px;
+    width: 66px;
+    border-radius:5%;
+    shape-margin: 15%;
+    /* position:relative; */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: flex;
+    /* width: 535px; */
+    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+    font-weight:bold;
+    /* margin-bottom: 5px; */
+}
+ 
+.game-table{
+    background-color: gray;
+    align-self: center;
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.cell {
+    /* width: 30px; */
+    /* height: 30px; */
+
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    font-size: 1.5em;
+      
+}
+
+
+.table-cells {
+    background-color: rgb(157, 202, 84);
+}
+.tableCell {
+    background-color: rgb(157, 202, 84);
+}
+
+.closedCell {
+    background-color: rgb(167, 195, 223);
+}
+
+.openedCell {
+    background-color: white;
+}
+
+.Flagged {
+    background-color: rgb(186, 148, 148);
+}
+
+.mine {
+    background-color: rgb(49, 48, 95);
+}
+
+.hasNeighbors {
+    background-color: rgb(183, 93, 153);
+}
