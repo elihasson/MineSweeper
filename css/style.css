@@ -1,6 +1,6 @@
 body {
     color:rgb(27, 27, 26);
-    background-image: url("imgs/mineSweeper2.jpg");
+    background-image: url("../imgs/mineSweeper2.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     position:relative;
