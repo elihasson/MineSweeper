@@ -3,6 +3,10 @@ const FLAG = '🏁'
 // const CLOSED = '🎛️'
 const BOOM = '💥'
 const EMPTY = ' '
+const HEART = '💖'
+const HEART_BLACK = '🖤'
+const HINT = '💡'
+
 
 // Default difficulty is Easy
 var gMinesNumber = 2
@@ -16,7 +20,9 @@ var gGame = {
     isOn: false,
     isSet: false,
     isWiner: false,
-    currDifficulty : 1,
+    currDifficulty: 1,
+    life: 3,
+    hint: 3,
 }
 
 
@@ -30,12 +36,16 @@ var tableCell = {
     isFlagged: false,
     isMine: false,
     isOpen: false,
+    saved: false,
     lastClicked: false,
+    hint: false,
 }
 
 var gStartTime
 var gTimerInterval
 var gTimer
+var gHintMode = false
+var gTimeOutHint
 
 
 function init() {
@@ -45,27 +55,50 @@ function init() {
     //in Case of restart
     clearInterval(gTimerInterval)
     gGame.isOn = false
+    gGame.life = 3
+    gGame.hint = 3
     gGame.time = 0
+    gGame.isWiner = false
     var elTimer = document.querySelector('.timer span')
     elTimer.innerText = gGame.time;
     // setDifficulty(gGame.currDifficulty)
     gGame.isSet = true
+    updateLife()
+    updateHints()
     messageUser(`All set!`)
-
 }
 // handles clicked cell (actually starts the game)
 function cellClicked(cellElm, posI, posJ) {
-
     // console.log('cellclicked')
     gSelectedCell = gBoard[posI][posJ]
+
+    if (gHintMode) {
+        document.body.style.cursor = "auto"
+        // debugger
+        // document.getElementsByTagName("body")[0].style.cursor = auto
+        gHintMode = false
+        hintCells = getArrayOfNeighbours(gBoard, posI, posJ)
+        hintCells.push(gSelectedCell)
+        showHintCells(hintCells)
+        // Update DOM
+        renderBoard(gBoard)
+        // debugger
+        // elmCursor = document.body.style.cursor 
+        // elmCursor.classList.help  
+        
+        gTimeOutHint = setTimeout(function(){
+            clearHintedCells(gBoard)
+        } , 1000)
+        return
+    }
 
     //starts theGame
     if (!gGame.isOn) {
         // in Case of clicking the table without restart
-        if (!gGame.isSet){
+        if (!gGame.isSet) {
             init()
             return
-        } 
+        }
 
         setMines(gBoard, gSelectedCell, gMinesNumber)
         setNeighbours(gBoard)
@@ -91,14 +124,24 @@ function cellClicked(cellElm, posI, posJ) {
     if (gSelectedCell.isOpen || gSelectedCell.isFlagged)
         return
 
+    // end of game or life    
     if (gSelectedCell.isMine) {
-        gSelectedCell.lastClicked = true
-        // Update Model
-        gBoard[posI][posJ] = gSelectedCell
-        gGame.isWiner = false
-        // endGame sets the table and Updates the DOM
-        endGame()
-        return
+        gGame.life--
+        updateLife()
+        if (gGame.life > 0) {
+            gSelectedCell.saved = true
+            // Update Model
+            gBoard[posI][posJ] = gSelectedCell
+            updateMinesLeft(-1)
+        } else {
+            gSelectedCell.lastClicked = true
+            // Update Model
+            gBoard[posI][posJ] = gSelectedCell
+            gGame.isWiner = false
+            // endGame sets the table and Updates the DOM
+            endGame()
+            return
+        }
     }
 
     if (!gSelectedCell.numOfNeighbors) {
@@ -164,10 +207,10 @@ function revealCellsRec(cellI, cellJ) {
     revealCellsRec(cellI - 1, cellJ)          //down
     revealCellsRec(cellI, cellJ + 1)          //Right
     revealCellsRec(cellI, cellJ - 1)          //Left
-    // revealCellsRec(cellI + 1, cellJ + 1)      // Primery Up
-    // revealCellsRec(cellI - 1, cellJ - 1)      // Primary Down
-    // revealCellsRec(cellI + 1, cellJ - 1)      // Secondary Up
-    // revealCellsRec(cellI - 1, cellJ + 1)      // Secondary Down
+    revealCellsRec(cellI + 1, cellJ + 1)      // Primery Up
+    revealCellsRec(cellI - 1, cellJ - 1)      // Primary Down
+    revealCellsRec(cellI + 1, cellJ - 1)      // Secondary Up
+    revealCellsRec(cellI - 1, cellJ + 1)      // Secondary Down
     return
 
 }
@@ -287,7 +330,9 @@ function createCell(rwIdx, colIdx) {
     cell.isFlagged = false
     cell.isMine = false
     cell.isOpen = false
+    cell.saved = false
     cell.lastClicked = false
+    cell.hint = false
     // board[rwIdx][colIdx] = cell 
     return cell
 }
@@ -307,23 +352,31 @@ function renderBoard(board) {
 
             // set classes and values
             var className = 'tableCell '
-            if (!cell.isOpen) {
-                className += `closedCell `
-                // value = CLOSED
-                if (cell.isFlagged) {
-                    className += 'Flagged '
-                    value = FLAG
-                }
+            if (cell.hint) {
+                className += 'hint'
+                value = cell.numOfNeighbors? cell.numOfNeighbors : EMPTY
+                value = cell.isMine ? MINE : value
             } else {
-                className += `openedCell `
-                if (cell.isMine) {
-                    className += 'mine '
-                    cell.lastClicked ? value = BOOM : value = MINE
-                } else {
-                    if (cell.numOfNeighbors) {
-                        className += 'hasNeighbors '
-                        value = cell.numOfNeighbors
+                if (!cell.isOpen) {
+                    className += `closedCell `
+                    // value = CLOSED
+                    if (cell.isFlagged) {
+                        className += 'Flagged '
+                        value = FLAG
                     }
+                } else {
+                    className += `openedCell `
+                    if (cell.isMine) {
+                        className += 'mine '
+                        cell.saved ? value = HEART : value = MINE
+                        cell.lastClicked ? value = BOOM : value
+                    } else {
+                        if (cell.numOfNeighbors) {
+                            className += 'hasNeighbors '
+                            value = cell.numOfNeighbors
+                        }
+                    }
+
                 }
             }
 
@@ -395,6 +448,65 @@ function messageUser(str) {
     var elMsg = document.querySelector('.msguser')
     elMsg.innerText = str;
 }
+// update hearts of life in  the DOM
+function updateLife() {
+    var elLife = document.querySelector('.lives')
+    var str = ''
+    if (gGame.life === 0) str = HEART_BLACK + HEART_BLACK + HEART_BLACK
+    if (gGame.life === 1) str = HEART + HEART_BLACK + HEART_BLACK
+    if (gGame.life === 2) str = HEART + HEART + HEART_BLACK
+    if (gGame.life === 3) str = HEART + HEART + HEART
+
+    elLife.innerText = str;
+}
+
+// updates Hints in  the DOM
+function updateHints() {
+    var elHint = document.querySelector('.hints')
+    var str = ''
+    if (gGame.hint === 0) str = ''
+    if (gGame.hint === 1) str = HINT
+    if (gGame.hint === 2) str = HINT + HINT
+    if (gGame.hint === 3) str = HINT + HINT + HINT
+
+    elHint.innerText = str;
+}
+
+function getHint() {
+    if (gGame.hint > 0 && gGame.isOn) {
+        gGame.hint--
+        gHintMode = true
+        // document.getElementsByTagName("body")[0].style.cursor = "url('http://wiki-devel.sugarlabs.org/images/e/e2/Arrow.cur'), auto"; 
+        // document.body.style.cursor = "wait"
+        document.body.style.cursor = "pointer"
+        updateHints()
+    }
+}
+
+function uncoverNeighbours(cellElm) {
+    console.log(cellElm)
+}
+// show cells for hint
+function showHintCells(cells) {
+    for (var i = 0; i < cells.length; i++) {
+        var posI = cells[i].location.i
+        var posJ = cells[i].location.j
+        gBoard[posI][posJ].hint = true
+    }
+}
+//clear all table from hints
+function clearHintedCells(board) {
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[i].length; j++) {
+            board[i][j].hint = false
+        }
+    }
+    // Update DOM
+    renderBoard(board)
+    clearTimeout(gTimeOutHint)
+}
+
+
 // open all cells in table
 function revealAllBoard() {
     for (var i = 0; i < gBoard.length; i++) {
@@ -443,7 +555,8 @@ function updateMinesLeft(diff) {
 function checkIfWinner(board) {
     for (var i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
-            if (board[i][j].isFlagged && !board[i][j].isMine) {
+            if (board[i][j].isFlagged && !board[i][j].isMine ||
+                board[i][j].saved && !board[i][j].isMine) {
                 return false
             }
         }
@@ -451,6 +564,3 @@ function checkIfWinner(board) {
     return true
 }
 // 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min
-}

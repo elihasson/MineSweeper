@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,35 +8,46 @@
     <title>MineSweeper</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body onload="init()" >    
-    <h1 title="mineSweeper1" class="headline">MineSweeper</h1>
+
+<body onload="init()">
+    <h1 title="MineSweeper" class="headline">MineSweeper</h1>
     <!-- <div class="background"></div> -->
     <div class="difficulty">
         <h3 title="difficulty-title" class="difficulty-title">Choose difficulty: </h3>
-        <input type="radio" name="difficulty" value="1" checked="checked" onclick="setDifficulty(1)">
-        <label for="Easy">Easy</label>
-
-        <input type="radio" name="difficulty" value="2" onclick="setDifficulty(2)">
-        <label for="Normal">Normal</label>
-
-        <input type="radio" name="difficulty" value="3" onclick="setDifficulty(3)">
-        <label for="Hard">Hard</label>
-
-        <input type="radio" name="difficulty" value="4" onclick="setDifficulty(4)">
-        <label for="Extreme">Extreme</label>
+        <!-- <div> <span>dodo</span></div> -->
+        <!-- <button>Hi</button> -->
+        <!-- <fieldset> -->
+            <div class="lives">lives</div>
+            <div class="radio-btns">
+                <input class="radio-input" type="radio" name="difficulty" value="1" checked="checked"
+                onclick="setDifficulty(1)">
+                <label class="radio-label" for="Easy">Easy</label>
+                
+                <input class="radio-input" type="radio" name="difficulty" value="2" onclick="setDifficulty(2)">
+                <label class="radio-label" for="Normal">Normal</label>
+                
+                <input class="radio-input" type="radio" name="difficulty" value="3" onclick="setDifficulty(3)">
+                <label class="radio-label" for="Hard">Hard</label>
+                
+                <input class="radio-input" type="radio" name="difficulty" value="4" onclick="setDifficulty(4)">
+                <label class="radio-label" for="Extreme">Extreme</label>
+            </div>
+            <div class="hints" onclick="getHint(this)">Hints</div>
+        <!-- </fieldset> -->
     </div>
     <div class="top">
         <div class="timer">Time : <span>0</span></div>
         <div class="msguser">All Set ! </div>
-        <div class="mines"><span>Mines left: 0</span></div> 
-        <div> <button class="restart" onclick="init()">Restart</button> </div>   
+        <div class="mines"><span>Mines left: 0</span></div>
+        <div> <button class="restart" onclick="init()">Restart</button> </div>
     </div>
     <table class="game-table" oncontextmenu="preventContextMenu(event)">
         <tbody class="table-all-cells">
         </tbody>
-    </table>    
-    
+    </table>
+
     <script src="js/utils.js"></script>
     <script src="js/game.js"></script>
 </body>
+
 </html>
